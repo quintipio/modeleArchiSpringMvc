@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 /**
  * Converter des différents roles
  */
+
+@Component
 public class RoleToUserProfileConverter implements Converter<Object, UserProfile>{
 
 static final Logger logger = LoggerFactory.getLogger(RoleToUserProfileConverter.class);

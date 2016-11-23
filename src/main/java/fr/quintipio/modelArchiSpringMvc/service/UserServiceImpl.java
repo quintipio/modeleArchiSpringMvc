@@ -75,4 +75,10 @@ public class UserServiceImpl implements UserService {
         User user = findBySSO(sso);
         return ( user == null || ((id != null) && (user.getId() == id)));
     }
+
+    @Override
+    public boolean isUserEmailUnique(Integer id, String email) {
+        User user = findByEmail(email);
+        return ( user == null || ((id != null) && (user.getId() == id)));
+    }
 }

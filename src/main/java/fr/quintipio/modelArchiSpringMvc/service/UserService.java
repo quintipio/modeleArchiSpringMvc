@@ -23,4 +23,6 @@ public interface UserService {
 
     boolean isUserSSOUnique(Integer id, String sso);
 
+    boolean isUserEmailUnique(Integer id, String email);
+
 }

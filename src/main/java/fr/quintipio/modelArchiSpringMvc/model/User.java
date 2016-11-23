@@ -12,6 +12,9 @@ import javax.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="USER")
@@ -31,38 +34,53 @@ public class User{
 	Long version;
 
 	@NotNull
+	@NotEmpty
 	@Column(name="SSO_ID", unique=true, nullable=false)
     String ssoId;
 
+
+	@NotEmpty
 	@Column(name="PASSWORD", nullable=false)
-    @NotNull(message = "{NonVide}")
-    @Size(min= 8 ,max = 255, message = "{PassMinMax}")
+    @NotNull
+    @Size(min= 8 ,max = 255)
+	@Length(min= 8 ,max = 255)
     String password;
 
+
+	@NotEmpty
 	@Column(name="FIRST_NAME", nullable=false)
-    @NotNull(message = "{NonVide}")
-    @Size(max = 255, message = "{Max255}")
+    @NotNull
+    @Size(max = 255)
+	@Length(max = 255)
 	private String firstName;
 
+
+	@NotEmpty
 	@Column(name="LAST_NAME", nullable=false)
-    @NotNull(message = "{NonVide}")
-    @Size(max = 255, message = "{Max255}")
+    @NotNull
+	@Length(max = 255)
+    @Size(max = 255)
 	private String lastName;
 
-    @Past(message = "{DateNaissanceInf}")
+    @Past
     @Column(name="BIRTH_DATE", nullable=false)
+	@DateTimeFormat(pattern="dd/MM/yyyy")
     Date birthDate;
 
+
+	@NotEmpty
 	@Column(name="EMAIL", nullable=false)
-    @NotNull(message = "{NonVide}")
-    @Size(max = 255, message = "{Max255}")
-    @Email(message = "{MailInvalide}")
+    @NotNull
+    @Size(max = 255)
+	@Length(max = 255)
+    @Email
 	private String email;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="idcommune")
     Commune ville;
 
+	@NotEmpty
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "APP_USER_USER_PROFILE", 
              joinColumns = { @JoinColumn(name = "USER_ID") }, 

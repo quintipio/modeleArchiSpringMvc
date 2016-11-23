@@ -1,5 +1,6 @@
 package fr.quintipio.modelArchiSpringMvc.configuration;
 
+import fr.quintipio.modelArchiSpringMvc.converter.CommuneConverter;
 import fr.quintipio.modelArchiSpringMvc.converter.RoleToUserProfileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -26,6 +27,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     RoleToUserProfileConverter roleToUserProfileConverter;
+    @Autowired
+    CommuneConverter communeConverter;
 
 
     /**
@@ -49,6 +52,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     /**
@@ -58,6 +62,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverter(roleToUserProfileConverter);
+        registry.addConverter(communeConverter);
     }
 
     /**
@@ -67,7 +72,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
+        messageSource.setBasename("message");
         return messageSource;
     }
 }
