@@ -9,9 +9,23 @@ import java.util.List;
  */
 public interface UserProfileService {
 
+    /**
+     * Retoune un role à partir de son id
+     * @param id l'id du role
+     * @return le role
+     */
     UserProfile findById(int id);
 
+    /**
+     * Retourne un role à partir de son nom
+     * @param type le nom du role
+     * @return le role
+     */
     UserProfile findByType(String type);
 
+    /**
+     * Retourne tout les roles exsitants
+     * @return la liste des roles
+     */
     List<UserProfile> findAll();
 }

@@ -10,7 +10,7 @@
       Gestion d'un compte
     </jsp:attribute>
     <jsp:body>
-        <form:form method="POST" modelAttribute="user" class="form-horizontal">
+        <form:form method="POST" modelAttribute="user" class="form-horizontal"> <!-- form:from ajotue automatiquement l'input pour le csrf -->
             <form:input type="hidden" path="id" id="id"/>
             <div class="generic-container">
                 <div class="row">

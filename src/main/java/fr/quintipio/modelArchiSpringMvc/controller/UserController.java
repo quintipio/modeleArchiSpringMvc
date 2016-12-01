@@ -1,8 +1,6 @@
 package fr.quintipio.modelArchiSpringMvc.controller;
 
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
@@ -14,7 +12,6 @@ import fr.quintipio.modelArchiSpringMvc.service.CommuneService;
 import fr.quintipio.modelArchiSpringMvc.service.UserProfileService;
 import fr.quintipio.modelArchiSpringMvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -26,12 +23,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Controlleur pour la gestion des utilisateur
+ */
 @Controller
-//@RequestMapping("/")
-@SessionAttributes({"roles","listeCommune"})
+//@RequestMapping("/") //si on veut mettre un autre préfixe avant chacun des liens du controlleur
+@SessionAttributes({"roles","listeCommune"}) // pour les models autre et la session http
 public class UserController {
 
 
@@ -55,6 +54,12 @@ public class UserController {
 
 
     /**ADMIN **/
+
+    /**
+     * Retourne la page de liste des utilisateurs
+     * @param model
+     * @return
+     */
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = {"/list" }, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
@@ -66,6 +71,11 @@ public class UserController {
     }
 
 
+    /**
+     * Pour supprimer un utilisateur
+     * @param id l'id de l'utilisateur à supprimer
+     * @return
+     */
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = { "/delete-user-{id}" }, method = RequestMethod.GET)
     public String deleteUser(@PathVariable String id) {
@@ -79,6 +89,12 @@ public class UserController {
         return "redirect:/list";
     }
 
+    /**
+     * Pour que l'admin modifie un utilisateur (accès à la page)
+     * @param id l'id de l'utilisateur à modifier
+     * @param model
+     * @return
+     */
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
     public String editUser(@PathVariable String id,ModelMap model) {
@@ -95,6 +111,14 @@ public class UserController {
         return "redirect:/list";
     }
 
+    /**
+     * Action de modification d'un utilisateur
+     * @param id l'id de l'utilisateur à modifier
+     * @param user les nouvelles données utilisateurs
+     * @param result
+     * @param model
+     * @return
+     */
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
     public String editUser(@PathVariable String id,@Valid User user, BindingResult result, ModelMap model) {
@@ -126,6 +150,11 @@ public class UserController {
 
     /**UTILISATEUR **/
 
+    /**
+     * Accès à la page de mise à jour des données du compte
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
     @RequestMapping(value = { "/update" }, method = RequestMethod.GET)
     public String editUser(ModelMap model) {
@@ -140,6 +169,13 @@ public class UserController {
         return "login";
     }
 
+    /**
+     * Modifie les données du compte
+     * @param user les nouvelles données utilisateurs
+     * @param result
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
     @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
     public String updateUser(@Valid User user, BindingResult result, ModelMap model) {
@@ -165,6 +201,11 @@ public class UserController {
 
     /**PUBLIC **/
 
+    /**
+     * Accès à la page de création de compte
+     * @param model
+     * @return
+     */
     @RequestMapping(value = { "/create" }, method = RequestMethod.GET)
     public String newUser(ModelMap model) {
         List<Commune> listeCommune = communeService.findAllCommune();
@@ -176,6 +217,13 @@ public class UserController {
         return "create";
     }
 
+    /**
+     * Créer un nouveau compte
+     * @param user l'utilisateur à créer
+     * @param result
+     * @param model
+     * @return
+     */
     @RequestMapping(value = { "/create" }, method = RequestMethod.POST)
     public String saveUser(@Valid User user, BindingResult result,ModelMap model) {
 
@@ -206,7 +254,11 @@ public class UserController {
     }
 
 
-
+    /**
+     * Accès à la page de login
+     * @param model
+     * @return
+     */
     @RequestMapping(value = {"/","/login"}, method = RequestMethod.GET)
     public String loginPage(ModelMap model) {
 
@@ -222,17 +274,30 @@ public class UserController {
 
     /**DIVERS **/
 
+    /**
+     * Page d'erreur
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getPrincipal());
         return "accessDenied";
     }
 
+    /**
+     * Pour afficher une liste des roles
+     * @return
+     */
     @ModelAttribute("roles") //pour appeler d'autres model dans la vue
     public List<UserProfile> initializeProfiles() {
         return userProfileService.findAll();
     }
 
+    /**
+     * Pour afficher une liste de communes
+     * @return
+     */
     @ModelAttribute("listeCommune")
     public List<Commune> initializeCommunes() {
         return communeService.findAllCommune();
@@ -256,6 +321,10 @@ public class UserController {
         return userName;
     }
 
+    /**
+     * controle si l'utilisateur est anonyme ou non
+     * @return
+     */
     private boolean isCurrentAuthenticationAnonymous() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authenticationTrustResolver.isAnonymous(authentication);

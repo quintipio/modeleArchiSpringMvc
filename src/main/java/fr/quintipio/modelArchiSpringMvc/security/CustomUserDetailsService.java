@@ -17,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Classe personalsié pour la gestion de la sécurité avec les données utilisateur en base
+ */
 @Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 

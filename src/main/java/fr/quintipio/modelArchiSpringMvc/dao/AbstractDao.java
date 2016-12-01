@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Classe abstraite pour la partie métier avec la base
- * @param <PK>
- * @param <T>
+ * @param <PK> le type de la clé primaire
+ * @param <T> le type de l'entité
  */
 public abstract class AbstractDao<PK extends Serializable, T> {
 
