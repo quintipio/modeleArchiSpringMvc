@@ -60,17 +60,10 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-label" for="ssoId">Email </label>
                         <div class="col-md-7">
-                            <c:choose>
-                                <c:when test="${edit}">
-                                    <form:input type="text" path="email" id="email" class="form-control input-sm" disabled="true"/>
-                                </c:when>
-                                <c:otherwise>
                                     <form:input type="text" path="email" id="email" class="form-control input-sm" />
                                     <div class="has-error">
                                         <form:errors path="email" class="help-inline"/>
                                     </div>
-                                </c:otherwise>
-                            </c:choose>
                         </div>
                     </div>
                 </div>
@@ -91,10 +84,19 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-label" for="password">Mot de passe</label>
                         <div class="col-md-7">
-                            <form:input type="password" path="password" id="password" class="form-control input-sm" />
-                            <div class="has-error">
-                                <form:errors path="password" class="help-inline"/>
-                            </div>
+                            <c:choose>
+                                <c:when test="${edit}">
+                                    <form:input type="hidden" path="password" id="password" class="form-control input-sm" />
+                                </c:when>
+                                <c:otherwise>
+                                    <form:input type="password" path="password" id="password" class="form-control input-sm" />
+                                    <div class="has-error">
+                                        <form:errors path="password" class="help-inline"/>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
+
                         </div>
                     </div>
                 </div>
@@ -127,13 +129,22 @@
                 <div class="row">
                     <div class="form-actions floatRight">
                         <c:choose>
-                            <c:when test="${edit}">
-                                <input type="submit" value="Modifier" class="btn btn-primary btn-sm"/> ou <a href="<c:url value='/list' />">Retourner à l'acceuil</a>
+                            <c:when test="${editAnotherUser}">
+                                <input type="submit" value="Mettre à jour" class="btn btn-primary btn-sm"/>
                             </c:when>
                             <c:otherwise>
-                                <input type="submit" value="Enregistrer" class="btn btn-primary btn-sm"/> ou <a href="<c:url value='/list' />">Retourner à l'acceuil</a>
+                                <c:choose>
+                                    <c:when test="${edit}">
+                                        <input type="submit" value="Modifier" class="btn btn-primary btn-sm"/> ou <a href="<c:url value='/login' />">Retourner à l'acceuil</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="submit" value="Enregistrer" class="btn btn-primary btn-sm"/> ou <a href="<c:url value='/login' />">Retourner à l'acceuil</a>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:otherwise>
                         </c:choose>
+
+
                     </div>
                 </div>
             </div>

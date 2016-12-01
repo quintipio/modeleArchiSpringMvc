@@ -16,6 +16,7 @@ import fr.quintipio.modelArchiSpringMvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 //@RequestMapping("/")
-@SessionAttributes("roles")
+@SessionAttributes({"roles","listeCommune"})
 public class UserController {
 
 
@@ -54,6 +55,7 @@ public class UserController {
 
 
     /**ADMIN **/
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = {"/list" }, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
 
@@ -63,6 +65,8 @@ public class UserController {
         return "userslist";
     }
 
+
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = { "/delete-user-{id}" }, method = RequestMethod.GET)
     public String deleteUser(@PathVariable String id) {
         try {
@@ -75,29 +79,88 @@ public class UserController {
         return "redirect:/list";
     }
 
-    /**UTILISATEUR **/
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.GET)
+    public String editUser(@PathVariable String id,ModelMap model) {
+        int idint = 0;
+        idint = Integer.parseInt(id);
+        if(idint != 0 ){
+            User user = userService.findById(idint);
+            model.addAttribute("user", user);
+            model.addAttribute("edit", true);
+            model.addAttribute("editAnotherUser",true);
+            model.addAttribute("loggedinuser", getPrincipal());
+            return "create";
+        }
+        return "redirect:/list";
+    }
 
-    @RequestMapping(value = { "/update" }, method = RequestMethod.GET)
-    public String editUser(ModelMap model) {
-        User user = userService.findBySSO(getPrincipal());
-        model.addAttribute("user", user);
-        model.addAttribute("edit", true);
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = { "/edit-user-{id}" }, method = RequestMethod.POST)
+    public String editUser(@PathVariable String id,@Valid User user, BindingResult result, ModelMap model) {
+
         model.addAttribute("loggedinuser", getPrincipal());
+
+        int idint = 0;
+        idint = Integer.parseInt(id);
+        if(idint != 0 ){
+            User userFound = userService.findById(idint);
+
+            if (result.hasErrors() || userFound == null) {
+                return "create";
+            }
+
+            userFound.setFirstName(user.getFirstName());
+            userFound.setLastName(user.getLastName());
+            userFound.setVille(user.getVille());
+            userFound.setUserProfiles(user.getUserProfiles());
+            userFound.setEmail(user.getEmail());
+            userFound.setBirthDate(user.getBirthDate());
+
+            userService.updateUser(user);
+
+            return "list";
+        }
         return "create";
     }
 
-    @RequestMapping(value = { "/update-{ssoId}" }, method = RequestMethod.POST)
-    public String updateUser(@Valid User user, BindingResult result, ModelMap model, @PathVariable String ssoId) {
+    /**UTILISATEUR **/
 
-        if (result.hasErrors()) {
+    @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
+    @RequestMapping(value = { "/update" }, method = RequestMethod.GET)
+    public String editUser(ModelMap model) {
+        User user = userService.findBySSO(getPrincipal());
+        if(user != null) {
+            model.addAttribute("user", user);
+            model.addAttribute("edit", true);
+            model.addAttribute("editAnotherUser",false);
+            model.addAttribute("loggedinuser", getPrincipal());
+            return "create";
+        }
+        return "login";
+    }
+
+    @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
+    @RequestMapping(value = { "/update" }, method = RequestMethod.POST)
+    public String updateUser(@Valid User user, BindingResult result, ModelMap model) {
+
+        User userFound = userService.findBySSO(getPrincipal());
+
+        if (result.hasErrors() || userFound == null) {
             return "create";
         }
 
+        userFound.setFirstName(user.getFirstName());
+        userFound.setLastName(user.getLastName());
+        userFound.setVille(user.getVille());
+        userFound.setUserProfiles(user.getUserProfiles());
+        userFound.setEmail(user.getEmail());
+        userFound.setBirthDate(user.getBirthDate());
+
         userService.updateUser(user);
 
-        model.addAttribute("success", "Utilisateur " + user.getFirstName() + " "+ user.getLastName() + " modifié");
         model.addAttribute("loggedinuser", getPrincipal());
-        return "create";
+        return "login";
     }
 
     /**PUBLIC **/
@@ -108,6 +171,7 @@ public class UserController {
         User user = new User();
         model.addAttribute("user", user);
         model.addAttribute("edit", false);
+        model.addAttribute("editAnotherUser",false);
         model.addAttribute("loggedinuser", getPrincipal());
         return "create";
     }
@@ -115,6 +179,8 @@ public class UserController {
     @RequestMapping(value = { "/create" }, method = RequestMethod.POST)
     public String saveUser(@Valid User user, BindingResult result,ModelMap model) {
 
+        model.addAttribute("edit", false);
+        model.addAttribute("editAnotherUser",false);
         if (result.hasErrors()) {
             return "create";
         }
@@ -125,11 +191,12 @@ public class UserController {
             return "create";
         }
 
+        /* Si on veut faire un controle sur l'adresse email
         if(!userService.isUserEmailUnique(user.getId(), user.getSsoId())){
             FieldError ssoError =new FieldError("user","email",messageSource.getMessage("non.unique.email", new String[]{user.getEmail()}, Locale.getDefault()));
             result.addError(ssoError);
             return "create";
-        }
+        }*/
 
         userService.saveUser(user);
 
@@ -141,12 +208,16 @@ public class UserController {
 
 
     @RequestMapping(value = {"/","/login"}, method = RequestMethod.GET)
-    public String loginPage() {
+    public String loginPage(ModelMap model) {
+
+        model.addAttribute("loggedinuser", getPrincipal());
+        return "login";
+        /* si on veut faire une redirection en fonction de l'état de connexion
         if (isCurrentAuthenticationAnonymous()) {
             return "login";
         } else {
             return "redirect:/list";
-        }
+        }*/
     }
 
     /**DIVERS **/
@@ -157,7 +228,7 @@ public class UserController {
         return "accessDenied";
     }
 
-    @ModelAttribute("roles")
+    @ModelAttribute("roles") //pour appeler d'autres model dans la vue
     public List<UserProfile> initializeProfiles() {
         return userProfileService.findAll();
     }
@@ -169,6 +240,10 @@ public class UserController {
 
     /**PRIVE **/
 
+    /**
+     * Retourne le nom d'utilisateur d'un utilisateur
+     * @return le nom d'utilisateur
+     */
     private String getPrincipal(){
         String userName = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

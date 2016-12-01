@@ -34,10 +34,10 @@
                     <td>${user.email}</td>
                     <td>${user.ssoId}</td>
                     <sec:authorize access="hasRole('ADMIN') or hasRole('DBA')">
-                        <td><a href="<c:url value='/edit-user-${user.ssoId}' />" class="btn btn-success custom-width">Modifier</a></td>
+                        <td><a href="<c:url value='/edit-user-${user.id}' />" class="btn btn-success custom-width">Modifier</a></td>
                     </sec:authorize>
                     <sec:authorize access="hasRole('ADMIN')">
-                        <td><a href="<c:url value='/delete-user-${user.ssoId}' />" class="btn btn-danger custom-width">Supprimer</a></td>
+                        <td><a href="<c:url value='/delete-user-${user.id}' />" class="btn btn-danger custom-width">Supprimer</a></td>
                     </sec:authorize>
                 </tr>
             </c:forEach>

@@ -11,10 +11,17 @@
     <jsp:body>
         <div id="mainWrapper">
             <div class="generic-container">
+                <sec:authorize access="isAuthenticated()">
+                    Vous êtes connecté.
+                    <br/>
+                    <a href="<c:url value="/logout"/>">Se déconnecter</a>
+                </sec:authorize>
+
+                <sec:authorize access="!isAuthenticated()">
                 <form action="${loginUrl}" method="post" class="form-horizontal">
                     <c:if test="${param.error != null}">
                         <div class="alert alert-danger">
-                            <p>Mauvais mail ou mot de passe</p>
+                            <p>Mauvais nom d'utilisateur ou mot de passe</p>
                         </div>
                     </c:if>
                     <c:if test="${param.logout != null}">
@@ -24,7 +31,7 @@
                     </c:if>
                     <div class="input-group input-sm">
                         <label class="input-group-addon" for="username"><i class="fa fa-user"></i></label>
-                        <input type="text" class="form-control" id="username" name="ssoId" placeholder="Adresse email" required>
+                        <input type="text" class="form-control" id="username" name="sso" placeholder="Nom d'utilisateur" required>
                     </div>
                     <div class="input-group input-sm">
                         <label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label>
@@ -41,6 +48,7 @@
                         <input type="submit" class="btn btn-block btn-primary btn-default" value="Se connecter">
                     </div>
                 </form>
+                </sec:authorize>
             </div>
         </div>
     </jsp:body>

@@ -49,17 +49,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/static/**").permitAll()
                 .antMatchers( "/webjars/**").permitAll()
                 .antMatchers( "/create").permitAll()
-                .antMatchers("/list").hasRole("ADMIN")
-                .anyRequest().hasRole("ADMIN")
-                .antMatchers("/update").hasAnyRole("ADMIN","USER","DBA")
-                .anyRequest().authenticated()
+                .antMatchers("/list", "/delete-user-*","edit-user-*").access(" hasRole('ADMIN')").anyRequest().hasRole("ADMIN")
+                .antMatchers("/update").hasAnyRole("ADMIN","USER","DBA") .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .usernameParameter("sso")
+                .passwordParameter("password")
                 .permitAll()
                 .and()
-                .logout()
-                .permitAll();
+                .rememberMe()
+                .rememberMeParameter("remember-me")
+                .tokenRepository(tokenRepository)
+                .tokenValiditySeconds(86400)
+                .and()
+                .csrf()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/Access_Denied");
     }
 
 
