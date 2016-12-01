@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="modeleArchiSpringMvc:war exploded">
-    <output-path>$PROJECT_DIR$/target/testArchiSpringMvc</output-path>
+    <output-path>$PROJECT_DIR$/target/modeleArchiSpringMvc</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -181,11 +181,11 @@
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
           <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.16.10" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap:3.3.5" />
-          <element id="library" level="project" name="Maven: org.webjars:jquery:1.11.1" />
+          <element id="library" level="project" name="Maven: org.webjars:jquery:3.1.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/testArchiSpringMvc/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/modeleArchiSpringMvc/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="modeleArchiSpringMvc/web/Web" />
     </root>

@@ -71,4 +71,11 @@ public interface UserService {
      */
     boolean isUserEmailUnique(Integer id, String email);
 
+    /**
+     * Recherche des utilisateurs à partir d'un nom et un prénom
+     * @param name la chaine à rechercher
+     * @return la liste des utilisateurs trouvés
+     */
+    List<User> getUserByName(String name);
+
 }

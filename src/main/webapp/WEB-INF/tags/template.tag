@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@attribute name="title" fragment="true" %>
+<%@attribute name="codeJava" fragment="true" required="false" %>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -50,6 +51,7 @@
                     </sec:authorize>
                     <sec:authorize access="hasAnyRole('ROLE_ADMIN', 'ROLE_DBA','ROLE_USER')">
                     <ul>
+                        <li><a href="<c:url value='/search'/> ">Recherche</a></li>
                         <li><a href="<c:url value='/update'/> ">Mon compte</a></li>
                     </ul>
                     </sec:authorize>
@@ -80,7 +82,7 @@
             </footer>
         </div>
     </body>
-    <script src="<c:url value='/webjars/jquery/1.11.1/jquery.min.js'/>"  type="text/javascript"></script>
+    <script src="<c:url value='/webjars/jquery/3.1.1/jquery.min.js'/>"  type="text/javascript"></script>
     <script src="<c:url value='/webjars/bootstrap/3.3.5/js/bootstrap.min.js'/>" type="text/javascript"></script>
-
+    <jsp:invoke fragment="codeJava"/>
 </html>

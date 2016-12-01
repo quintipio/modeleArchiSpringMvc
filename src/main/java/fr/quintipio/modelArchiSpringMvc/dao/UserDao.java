@@ -48,4 +48,11 @@ public interface UserDao {
      * @return la liste des utilisateurs
      */
     List<User> findAllUsers();
+
+    /**
+     * Recherche un utilisateur par son nom et prénom
+     * @param name la chaine à rechercher
+     * @return la liste des utilisateurs trouvés
+     */
+    List<User> findByName(String name);
 }

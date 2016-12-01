@@ -3,6 +3,7 @@ package fr.quintipio.modelArchiSpringMvc.dao;
 import fr.quintipio.modelArchiSpringMvc.model.User;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -68,5 +69,13 @@ public class UserDaoImpl  extends AbstractDao<Integer, User> implements UserDao 
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);//To avoid duplicates.
         List<User> users = (List<User>) criteria.list();
         return users;
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        Query q = getSession().createQuery("SELECT u FROM User u WHERE u.firstName LIKE '%:name%' OR u.lastName LIKE '%:name%'");
+        q.setParameter("name",name);
+        List<User> retour = (List<User>)q.list();
+        return retour;
     }
 }

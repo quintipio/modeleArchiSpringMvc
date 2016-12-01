@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Controlleur pour la gestion des utilisateur
  */
-@Controller
+@Controller //@RestController pour un controlleur full ajax
 //@RequestMapping("/") //si on veut mettre un autre préfixe avant chacun des liens du controlleur
 @SessionAttributes({"roles","listeCommune"}) // pour les models autre et la session http
 public class UserController {
@@ -198,6 +198,31 @@ public class UserController {
         model.addAttribute("loggedinuser", getPrincipal());
         return "login";
     }
+
+
+    /**
+     * Affiche la page de recherche
+     * @return
+     */
+    @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
+    @RequestMapping(value = { "/search" }, method = RequestMethod.GET)
+    public String search(ModelMap model) {
+
+        List<User> users = userService.findAllUsers();
+        model.addAttribute("users", users);
+        model.addAttribute("loggedinuser", getPrincipal());
+        return "search";
+    }
+
+
+    @RequestMapping(value = "/search/getResult",method=RequestMethod.POST)
+    @ResponseBody
+    public List<User> getSearchResultViaAjax(@RequestBody String nom) {
+            List<User> res = userService.getUserByName(nom);
+            return (res != null && !res.isEmpty())?res:null;
+    }
+
+
 
     /**PUBLIC **/
 

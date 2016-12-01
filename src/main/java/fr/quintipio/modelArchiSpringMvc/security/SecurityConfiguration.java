@@ -54,7 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/webjars/**").permitAll()
                 .antMatchers( "/create").permitAll()
                 .antMatchers("/list", "/delete-user-*","edit-user-*").access(" hasRole('ADMIN')").anyRequest().hasRole("ADMIN")
-                .antMatchers("/update").hasAnyRole("ADMIN","USER","DBA") .anyRequest().authenticated()
+                .antMatchers("/update","/search").hasAnyRole("ADMIN","USER","DBA") .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
