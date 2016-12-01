@@ -15,11 +15,13 @@
             <div class="generic-container">
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <label class="col-md-3 control-label" for="ssoId">Surnom </label>
+                        <c:if test="${!edit}">
+                            <label class="col-md-3 control-label" for="ssoId">Nom d'utilisateur </label>
+                        </c:if>
                         <div class="col-md-7">
                             <c:choose>
                                 <c:when test="${edit}">
-                                    <form:input type="text" path="ssoId" id="ssoId" class="form-control input-sm" disabled="true"/>
+                                    <form:input type="hidden" path="ssoId" id="ssoId" class="form-control input-sm" />
                                 </c:when>
                                 <c:otherwise>
                                     <form:input type="text" path="ssoId" id="ssoId" class="form-control input-sm" />
@@ -82,7 +84,9 @@
 
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <label class="col-md-3 control-label" for="password">Mot de passe</label>
+                        <c:if test="${!edit}">
+                            <label class="col-md-3 control-label" for="password">Mot de passe</label>
+                        </c:if>
                         <div class="col-md-7">
                             <c:choose>
                                 <c:when test="${edit}">

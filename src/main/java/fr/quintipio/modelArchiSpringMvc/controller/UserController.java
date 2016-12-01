@@ -143,7 +143,7 @@ public class UserController {
 
             userService.updateUser(user);
 
-            return "list";
+            return "redirect:/list";
         }
         return "create";
     }

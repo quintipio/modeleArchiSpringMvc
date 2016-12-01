@@ -101,6 +101,10 @@ footer ul li a ::hover {
     text-decoration: none;
 }
 
+.help-inline {
+    color: red;
+    font-weight: bold;
+}
 
 @media (min-width: 768px) {
     .container {
