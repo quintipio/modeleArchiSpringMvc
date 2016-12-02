@@ -15,57 +15,52 @@
             <script>
                 jQuery(document).ready(function($) {
 
-                    $("#searchForm").submit(function(event) {
+                    jQuery('#searchText').on('input', function() {
 
-                        // Disble the search button
-                        enableSearchButton(false);
-                        alert('aa');
                         // Prevent the form from submitting via the browser.
                         event.preventDefault();
 
                         searchViaAjax();
-
                     });
 
                 });
 
                 function searchViaAjax() {
-
-                    alert('aab');
+                    var token = $('#csrfToken').val();
+                    var header = $('#csrfHeader').val();
                     $.ajax({
                         type : "POST",
                         contentType : "application/json",
-                        url : "${home}/search/getResult",
+                        url : "${pageContext.request.contextPath}/search/getResult",
                         data : $("#searchText").val(),
                         dataType : 'json',
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("Accept", "application/json");
+                            xhr.setRequestHeader("Content-Type", "application/json");
+                            xhr.setRequestHeader(header, token);
+                        },
                         timeout : 100000,
                         success : function(data) {
                             console.log("SUCCESS: ", data);
-                            $("#searchText").val(data)
                         },
                         error : function(e) {
                             console.log("ERROR: ", e);
-                            display(e);
                         },
                         done : function(e) {
                             console.log("DONE");
-                            enableSearchButton(true);
                         }
                     });
                 }
-
-                function enableSearchButton(flag) {
-                    $("#searchButton").prop("disabled", flag);
-                }
-
         </script>
      </jsp:attribute>
 
 
     <jsp:body>
         <form:form method="POST" id="searchForm">
+            <input type="hidden" id="csrfToken" value="${_csrf.token}"/>
+            <input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
+
             <input type="text" id="searchText">
-            <input type="button" value="Rechercher" id="searchButton"/>
 
             <div class="panel-heading"><span class="lead">Résultat</span></div>
             <table class="table table-hover">

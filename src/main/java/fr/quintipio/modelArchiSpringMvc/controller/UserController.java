@@ -13,6 +13,7 @@ import fr.quintipio.modelArchiSpringMvc.service.UserProfileService;
 import fr.quintipio.modelArchiSpringMvc.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.core.Authentication;
@@ -215,10 +216,14 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/search/getResult",method=RequestMethod.POST)
+    @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
+    @RequestMapping(value = "/search/getResult", method=RequestMethod.POST)
     @ResponseBody
     public List<User> getSearchResultViaAjax(@RequestBody String nom) {
             List<User> res = userService.getUserByName(nom);
+        if(res != null) {
+            res.forEach(x -> x.setUserProfiles(null)); //un set ne passe pas en ajax
+        }
             return (res != null && !res.isEmpty())?res:null;
     }
 

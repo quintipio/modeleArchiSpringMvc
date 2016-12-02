@@ -9,6 +9,7 @@
         <title><jsp:invoke fragment="title"/></title>
         <link href="<c:url value='/webjars/bootstrap/3.3.5/css/bootstrap.min.css' />" rel="stylesheet"/>
         <link href="<c:url value='/static/css/style.css' />" rel="stylesheet"/>
+
     </head>
 
     <body>

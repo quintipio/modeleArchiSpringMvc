@@ -73,8 +73,8 @@ public class UserDaoImpl  extends AbstractDao<Integer, User> implements UserDao 
 
     @Override
     public List<User> findByName(String name) {
-        Query q = getSession().createQuery("SELECT u FROM User u WHERE u.firstName LIKE '%:name%' OR u.lastName LIKE '%:name%'");
-        q.setParameter("name",name);
+        Query q = getSession().createQuery("SELECT u FROM User u WHERE u.firstName LIKE :name OR u.lastName LIKE :name ");
+        q.setParameter("name","%"+name+"%");
         List<User> retour = (List<User>)q.list();
         return retour;
     }
