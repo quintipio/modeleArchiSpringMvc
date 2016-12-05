@@ -1,6 +1,7 @@
 package fr.quintipio.modelArchiSpringMvc.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
@@ -208,9 +209,6 @@ public class UserController {
     @Secured({"ROLE_USER","ROLE_DBA","ROLE_ADMIN"})
     @RequestMapping(value = { "/search" }, method = RequestMethod.GET)
     public String search(ModelMap model) {
-
-        List<User> users = userService.findAllUsers();
-        model.addAttribute("users", users);
         model.addAttribute("loggedinuser", getPrincipal());
         return "search";
     }
@@ -220,11 +218,19 @@ public class UserController {
     @RequestMapping(value = "/search/getResult", method=RequestMethod.POST)
     @ResponseBody
     public List<User> getSearchResultViaAjax(@RequestBody String nom) {
-            List<User> res = userService.getUserByName(nom);
+        List<User> res = new ArrayList<>();
+        if("null".equals(nom)) {
+            res = userService.findAllUsers();
+        }
+        else {
+            res = userService.getUserByName(nom);
+        }
+
         if(res != null) {
             res.forEach(x -> x.setUserProfiles(null)); //un set ne passe pas en ajax
         }
-            return (res != null && !res.isEmpty())?res:null;
+        return res;
+
     }
 
 

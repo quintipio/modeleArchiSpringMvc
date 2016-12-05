@@ -15,24 +15,55 @@
             <script>
                 jQuery(document).ready(function($) {
 
+                    var res = searchViaAjax("");
+
                     jQuery('#searchText').on('input', function() {
-
-                        // Prevent the form from submitting via the browser.
                         event.preventDefault();
-
-                        searchViaAjax();
+                        var toSend = $("#searchText").val();
+                        var res = searchViaAjax(toSend);
                     });
 
                 });
 
-                function searchViaAjax() {
+                function loadDatatable(data) {
+
+                    var table = $('#tableResult');
+                    if ( ! $.fn.DataTable.fnIsDataTable( table[0] ) ) {
+                        $('#tableResult').DataTable( {
+                            bProcessing : true,
+                            bFilter : false,
+                            bInfo : false,
+                            bJQueryUI : true,
+                            bLengthChange : false,
+                            bDestroy : true,
+                            bRetrieve : true,
+                            bStateSave : true,
+                            iDisplayLength : 10,
+                            aaData: data,
+                            aoColumns:[
+                                {mData: "firstName"},
+                                {mData: "lastName"},
+                                {mData: "email"},
+                                {mData: "ssoId"}
+                            ]
+                        } );
+                    } else {
+                        $('#tableResult').DataTable().fnClearTable();
+                        $('#tableResult').DataTable().fnAddData(data);
+                    }
+                }
+
+                function searchViaAjax(toSearch) {
                     var token = $('#csrfToken').val();
                     var header = $('#csrfHeader').val();
+                    if(!toSearch) {
+                        toSearch = "null";
+                    }
                     $.ajax({
                         type : "POST",
                         contentType : "application/json",
                         url : "${pageContext.request.contextPath}/search/getResult",
-                        data : $("#searchText").val(),
+                        data : toSearch,
                         dataType : 'json',
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("Accept", "application/json");
@@ -42,6 +73,7 @@
                         timeout : 100000,
                         success : function(data) {
                             console.log("SUCCESS: ", data);
+                            loadDatatable(data);
                         },
                         error : function(e) {
                             console.log("ERROR: ", e);
@@ -56,14 +88,14 @@
 
 
     <jsp:body>
-        <form:form method="POST" id="searchForm">
+        <form:form>
             <input type="hidden" id="csrfToken" value="${_csrf.token}"/>
             <input type="hidden" id="csrfHeader" value="${_csrf.headerName}"/>
 
             <input type="text" id="searchText">
 
             <div class="panel-heading"><span class="lead">Résultat</span></div>
-            <table class="table table-hover">
+            <table class="table table-hover" id="tableResult">
                 <thead>
                 <tr>
                     <th>Prénom</th>

@@ -182,6 +182,7 @@
           <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.16.10" />
           <element id="library" level="project" name="Maven: org.webjars:bootstrap:3.3.5" />
           <element id="library" level="project" name="Maven: org.webjars:jquery:3.1.1" />
+          <element id="library" level="project" name="Maven: org.webjars:datatables:1.9.4-2" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -9,6 +9,7 @@
         <title><jsp:invoke fragment="title"/></title>
         <link href="<c:url value='/webjars/bootstrap/3.3.5/css/bootstrap.min.css' />" rel="stylesheet"/>
         <link href="<c:url value='/static/css/style.css' />" rel="stylesheet"/>
+        <link href="<c:url value="/webjars/datatables/1.9.4/media/css/jquery.dataTables.css" />" rel="stylesheet"/>
 
     </head>
 
@@ -85,5 +86,6 @@
     </body>
     <script src="<c:url value='/webjars/jquery/3.1.1/jquery.min.js'/>"  type="text/javascript"></script>
     <script src="<c:url value='/webjars/bootstrap/3.3.5/js/bootstrap.min.js'/>" type="text/javascript"></script>
+    <script src="<c:url value="/webjars/datatables/1.9.4/media/js/jquery.dataTables.min.js" />" type="text/javascript"></script>"
     <jsp:invoke fragment="codeJava"/>
 </html>
