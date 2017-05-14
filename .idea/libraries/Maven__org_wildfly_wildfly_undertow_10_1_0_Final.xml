@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.wildfly:wildfly-undertow:10.1.0.Final">
+    <CLASSES>
+      <root url="jar://D:/Logiciel/conf/.m2/repository/org/wildfly/wildfly-undertow/10.1.0.Final/wildfly-undertow-10.1.0.Final.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/Logiciel/conf/.m2/repository/org/wildfly/wildfly-undertow/10.1.0.Final/wildfly-undertow-10.1.0.Final-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/Logiciel/conf/.m2/repository/org/wildfly/wildfly-undertow/10.1.0.Final/wildfly-undertow-10.1.0.Final-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
